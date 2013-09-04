@@ -1,0 +1,124 @@
+# ==========================================================================================================================================
+# On Production
+# ==========================================================================================================================================
+
+ifconfig eth1
+# you will need the ip on 2nd line labeled 'inet addr'
+
+# prod  : 10.180.161.74
+
+# ==========================================================================================================================================
+# On Production
+# ==========================================================================================================================================
+# remove all files from install
+# ------------------------------------------------------------------------------------------------------------------------------------------
+
+cd /var/www/users/root/scripts/install/
+ls -lrt
+
+rm *
+
+ls -lrt
+
+cd /var/www/users/root/scripts/install/before/
+ls -lrt
+
+rm *
+
+ls -lrt
+
+cd /var/www/users/root/scripts/install/logs/
+ls -lrt
+
+rm *
+
+ls -lrt
+
+# ------------------------------------------------------------------------------------------------------------------------------------------
+# backup the production code
+# ------------------------------------------------------------------------------------------------------------------------------------------
+
+cd /var/www/sites/workoutinbox.com/
+ls -lrt
+
+zip -r /var/www/users/root/scripts/install/before/prod_code.zip public private > /var/www/users/root/scripts/install/logs/zip_code.log
+
+cd /var/www/users/root/scripts/install/before/
+ls -lrt
+
+# ------------------------------------------------------------------------------------------------------------------------------------------
+# backup the production database
+# ------------------------------------------------------------------------------------------------------------------------------------------
+
+cd /var/www/users/root/scripts/install/before/
+ls
+
+mysqldump workoutdb --opt  --user=root --password > prod_workoutdb_dump.sql
+mysqldump workoutdb --skip-triggers --compact --no-create-info --complete-insert --user=root --password > prod_workoutdb_data.sql
+
+cd /var/www/users/root/scripts/install/before/
+ls -lrt
+
+# ------------------------------------------------------------------------------------------------------------------------------------------
+# backup the production client_data
+# ------------------------------------------------------------------------------------------------------------------------------------------
+
+cd /var/www
+ls
+
+zip -r /var/www/users/root/scripts/install/before/prod_client_data.zip client_data > /var/www/users/root/scripts//install/logs/zip.log
+
+cd /var/www/users/root/scripts/install/before/
+ls
+
+# ==========================================================================================================================================
+# On beta
+# ==========================================================================================================================================
+# remove the zipped beta code file on beta
+# ------------------------------------------------------------------------------------------------------------------------------------------
+
+cd /var/www/users/root/scripts/conversion/
+ls -lrt
+
+rm beta_code.zip
+
+ls -lrt
+
+# ------------------------------------------------------------------------------------------------------------------------------------------
+# move beta code to production
+# ------------------------------------------------------------------------------------------------------------------------------------------
+
+cd /var/www/sites/beta.workoutinbox.com/
+
+zip -r /var/www/users/root/scripts/conversion/beta_code.zip public private > /var/www/users/root/scripts/conversion/zip_code.log
+
+cd /var/www/users/root/scripts/conversion/
+ls -lrt
+
+scp beta_code.zip root@10.180.161.74:/var/www/users/root/scripts/install
+
+# ==========================================================================================================================================
+# On Production
+# ==========================================================================================================================================
+# Install the code from beta on production
+# ------------------------------------------------------------------------------------------------------------------------------------------
+
+cd /var/www/sites/workoutinbox.com
+
+rm -r public
+rm -r private
+
+unzip /var/www/users/root/scripts/install/beta_code.zip > /var/www/users/root/scripts/install/logs/unzip_code.log
+
+chown -R www-data:www-data public
+chown -R www-data:www-data private
+
+ls -lrt
+
+cd /var/www/sites/workoutinbox.com/private/application/config/
+ls -lrt
+
+vi database.php
+---- turn off development password and turn on production password ----
+
+# ------------------------------------------------------------------------------------------------------------------------------------------

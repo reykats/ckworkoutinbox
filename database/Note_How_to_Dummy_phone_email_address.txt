@@ -1,0 +1,12 @@
+
+# Clear all phone numbers and addresses. Dummy all email addresses. (Except on the support@workoutinbox user)
+
+cd /var/www/user/root/scripts/conversion
+ls
+
+rm dummy.log
+
+php /var/www/sites/alpha.workoutinbox.com/public/index.php cli dummy user > dummy.log
+
+ls
+more dummy.log

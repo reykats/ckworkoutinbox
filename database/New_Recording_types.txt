@@ -1,0 +1,5 @@
+mysql --user=root --password
+
+use workoutdb;
+
+insert into library_workout_recording_type (name) values ('Record Reps'),('Record Weight');

@@ -1,0 +1,183 @@
+# ==========================================================================================================================================
+# On Development
+# ==========================================================================================================================================
+
+ifconfig eth1
+# you will need the ip on 2nd line labeled 'inet addr'
+
+# demo  : 10.180.132.175
+
+# ==========================================================================================================================================
+# On Production
+# ==========================================================================================================================================
+# ************************************************************************************************************************
+# Create a dump of the database's data and structure AND Transfer them to demo
+# ************************************************************************************************************************
+
+cd /var/www/users/root/scripts/conversion/
+ls
+
+mysqldump workoutdb --opt  --user=root --password > prod_workoutdb_dump.sql
+mysqldump workoutdb --skip-triggers --compact --no-create-info --complete-insert --user=root --password > prod_workoutdb_data.sql
+
+cd /var/www/users/root/scripts/conversion/
+ls
+
+scp prod_workoutdb_data.sql root@10.180.132.175:/var/www/users/root/scripts/conversion
+scp prod_workoutdb_dump.sql root@10.180.132.175:/var/www/users/root/scripts/conversion
+
+# ************************************************************************************************************************
+# Create a dump of the client data AND Transfer it to demo
+# ************************************************************************************************************************
+
+cd /var/www
+
+zip -r /var/www/users/root/scripts/conversion/prod_client_data.zip client_data > /var/www/users/root/scripts/conversion/zip.log
+
+cd /var/www/users/root/scripts/conversion/
+ls
+
+scp prod_client_data.zip root@10.180.132.175:/var/www/users/root/scripts/conversion
+
+# ************************************************************************************************************************
+# - Optional - Get a dump of production source code AND move it to demo
+# ************************************************************************************************************************
+
+cd /var/www/sites/demo.workoutinbox.com/
+
+zip -r /var/www/users/root/scripts/conversion/prod_code.zip public private > /var/www/users/root/scripts/conversion/zip_code.log
+
+cd /var/www/users/root/scripts/conversion/
+ls -lrt
+
+scp prod_code.zip root@10.180.132.175:/var/www/users/root/scripts/conversion
+
+# ==========================================================================================================================================
+# On Development - demo
+# ==========================================================================================================================================
+# ************************************************************************************************************************
+# - Optional - copy the source code from Production to demo
+# ************************************************************************************************************************
+
+cd /var/www/sites/demo.workoutinbox.com
+
+rm -r public
+rm -r private
+
+unzip /var/www/users/root/scripts/conversion/prod_code.zip > /var/www/users/root/scripts/conversion/unzip_code.log
+
+chown -R www-data:www-data public
+chown -R www-data:www-data private
+
+cd /var/www/sites/demo.workoutinbox.com/private/application/config/
+ls
+
+vi database.php
+---- $db['workoutdb']['database'] = 'demodb';                      ----
+---- turn off production password and turn on development password ----
+---- turn off production password and turn on development password ----
+
+cd /var/www/sites/demo.workoutinbox.com/private/application/config/
+ls
+
+vi config.php
+---- $config['base_url']     = 'http://demo.workoutinbox.com/';
+
+vi config_workoutinbox.php
+---- $config['workoutinbox_client_data'] = '../../../demo/client_data';
+
+
+# ************************************************************************************************************************
+# - Optional - copy the source code from SVN to demo
+# ************************************************************************************************************************
+
+cd /var/www/sites/demo.workoutinbox.com
+
+rm -r public
+rm -r private
+
+unzip /var/www/users/root/scripts/conversion/svn_code.zip > /var/www/users/root/scripts/conversion/unzip_code.log
+
+chown -R www-data:www-data public
+chown -R www-data:www-data private
+
+cd /var/www/sites/demo.workoutinbox.com/private/application/config/
+ls
+
+vi database.php
+---- $db['workoutdb']['database'] = 'demodb';                      ----
+---- turn off production password and turn on development password ----
+---- turn off production password and turn on development password ----
+
+cd /var/www/sites/demo.workoutinbox.com/private/application/config/
+ls
+
+vi config.php
+---- $config['base_url']     = 'http://demo.workoutinbox.com/';
+
+vi config_workoutinbox.php
+---- $config['workoutinbox_client_data'] = '../../../demo/client_data';
+
+
+# ************************************************************************************************************************
+# copy client_data from Production to demo
+# ************************************************************************************************************************
+
+cd /var/www/demo/
+ls
+
+rm -r client_data
+
+unzip /var/www/users/root/scripts/conversion/prod_client_data.zip > /var/www/users/root/scripts/conversion/unzip.log
+
+chown -R www-data:www-data client_data
+
+# ************************************************************************************************************************
+# Copy db from production to demo
+# ************************************************************************************************************************
+
+cd /var/www/users/root/scripts/conversion/
+ls -lrt
+
+mysql --verbose --user=root --password
+	SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+	SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+	# ----------------------------------------------
+	# Allow 0 in auto increment Primary key
+	# ----------------------------------------------
+	SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO';
+	# ----------------------------------------------
+	# show warnings
+	# ----------------------------------------------
+	warnings;
+	
+	# ----------------------------------------------
+	# drop the database and rebuild it
+	# ----------------------------------------------
+	drop database demodb;
+	create database demodb;
+	
+	# ----------------------------------------------
+	# run the dump against the database
+	# ----------------------------------------------
+	use demodb;
+	source prod_workoutdb_dump.sql;
+	
+	# Do not send the user log notifications that are currently queued
+	
+	DELETE FROM user_notification_queue;
+	
+	# Change all passwords!
+	
+	UPDATE user SET password=MD5('demo!123') WHERE email <> '' AND email IS NOT NULL;
+	
+	exit;
+
+# ************************************************************************************************************************
+# rebuild the database schema file
+# ************************************************************************************************************************
+
+cd /var/www/users/root/scripts/conversion/
+ls -lrt
+
+php /var/www/sites/demo.workoutinbox.com/public/index.php cli schema refresh > schema_refresh.log

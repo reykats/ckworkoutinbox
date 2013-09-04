@@ -1,0 +1,864 @@
+[
+	{
+		"api_call": "GET/metadata",
+		"mandatory_data": [],
+		"description": "Get all the lookup tables",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "action_metadata->getAll"
+	}, {
+		"api_call": "GET/timezone",
+		"mandatory_data": [],
+		"description": "Get the Search List for the Time Zones",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "action_metadata->getTimezone"
+	}, {
+		"api_call": "GET/login",
+		"mandatory_data": [],
+		"description": "Get the logged in User's session data.",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "action_login->getSessionUserData"
+	}, {
+		"api_call": "POST/login/token",
+		"mandatory_data": ["token"],
+		"description": "Validate a login token.",
+		"validate": [],
+		"permission": [],
+		"perform": "action_user->validateToken/token"
+	}, {
+		"api_call": "POST/login/facebook",
+		"mandatory_data": ["id"],
+		"description": "Login using a Facebook id.",
+		"validate": [],
+		"permission": [],
+		"perform": "action_login->loginFacebook"
+	}, {
+		"api_call": "POST/login/google",
+		"mandatory_data": ["id"],
+		"description": "Login using a Googe id.",
+		"validate": [],
+		"permission": [],
+		"perform": "action_login->loginGoogle"
+	}, {
+		"api_call": "POST/login/email",
+		"mandatory_data": ["email", "password"],
+		"description": "Login using an email and password.",
+		"validate": [],
+		"permission": [],
+		"perform": "action_login->loginEmailPassword"
+	}, {
+		"api_call": "PUT/login/facebook",
+		"mandatory_data": ["token","id"],
+		"description": "Update the Facebook id for a login token.",
+		"validate": [],
+		"permission": [],
+		"perform": "action_user->updateFacebookLoginForToken"
+	}, {
+		"api_call": "PUT/login/google",
+		"mandatory_data": ["token","id"],
+		"description": "Update the Google id for a login token.",
+		"validate": [],
+		"permission": [],
+		"perform": "action_user->updateFacebookLoginForToken"
+	}, {
+		"api_call": "PUT/login/token",
+		"mandatory_data": ["token","password"],
+		"description": "Update the password for a login token.",
+		"validate": [],
+		"permission": [],
+		"perform": "action_user->updatePasswordLoginForToken"
+	}, {
+		"api_call": "PUT/login/reset",
+		"mandatory_data": ["email"],
+		"description": "Start the 'Reset Password' process.",
+		"validate": [],
+		"permission": [],
+		"perform": "action_user->setToken/email"
+	}, {
+		"api_call": "DELETE/login",
+		"mandatory_data": [],
+		"description": "logout.",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "action_login->logout"
+	}, {
+		"api_call": "POST/email/error",
+		"mandatory_data": ["method","url","input_data","message"],
+		"description": "Send System Error Email",
+		"validate": [],
+		"permission": [],
+		"perform": "email_error->sendEmail/method/url/input_data/message"
+	}, {
+		"api_call": "GET/file/view_image/size/{}/type/{}/filename/{}",
+		"mandatory_data": [],
+		"description": "View an image.",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "file_image->view_type/size/type/filename"
+	}, {
+		"api_call": "POST/upload/file",
+		"mandatory_data": [],
+		"description": "Upload a file to the temp directory",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "file_upload->upload_temp_image"
+	}, {
+		"api_call": "PUT/image/rotate",
+		"mandatory_data": ["type","filename","degrees"],
+		"description": "Rotate an Image",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "file_upload->rotate_image/data"
+	}, {
+		"api_call": "GET/upload/calendar/{}/ccyymmdd/{}",
+		"mandatory_data": [],
+		"description": "Upload a file from the temp directory for a Day on a Calendar",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsStaffOfCalendar/calendar"],
+		"permission": [],
+		"perform": "table_workoutdb_calendar_media->uploadCreate/calendar/ccyymmdd"
+	}, {
+		"api_call": "DELETE/calendar/media/{}",
+		"mandatory_data": [],
+		"description": "Delete an image from a Day on a Calendar",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "table_workoutdb_calendar_media->delete/media"
+	}, {
+		"api_call": "GET/upload/location/{}",
+		"mandatory_data": [],
+		"description": "Upload a file from the temp directory for a location",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "table_workoutdb_location_media->uploadCreate/location"
+	}, {
+		"api_call": "DELETE/location/media/{}",
+		"mandatory_data": [],
+		"description": "Delete an image from a location",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "table_workoutdb_location_media->delete/media"
+	}, {
+		"api_call": "GET/calendar/client/{}",
+		"mandatory_data": [],
+		"description": "Get a list of calendars for a Client",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsStaffOfClient/client"],
+		"permission": [],
+		"perform": "action_calendar->getForClientLocationOrClassroom/client"
+	}, {
+		"api_call": "GET/calendar/entry/calendar/{}",
+		"mandatory_data": [],
+		"description": "Get the calendar entries for a calendar",
+		"validate": ["SessionIsLoggedIn","SessionUserIsStaffOfCalendar/calendar"],
+		"permission": [],
+		"perform": "action_calendar_entry->getForCalendar/calendar"
+	}, {
+		"api_call": "GET/calendar/has_activity/client/{}/ccyymmdd/{}",
+		"mandatory_data": [],
+		"description": "Get the days of the week that the calendar has activity",
+		"validate": ["SessionIsLoggedIn","SessionUserIsStaffOfClient/client"],
+		"permission": [],
+		"perform": "action_has_activity->getDaysWithActivityForClientDate/client/ccyymmdd"
+	}, {
+		"api_call": "GET/calendar/entry/template/client/{}",
+		"mandatory_data": [],
+		"description": "Get a list of all calendar entry templates for a client.",
+		"validate": ["SessionIsLoggedIn","SessionUserIsStaffOfClient/client"],
+		"permission": [],
+		"perform": "action_calendar_entry_template->getForClient/client"
+	}, {
+		"api_call": "GET/calendar/event/list/client/{}/date/{}",
+		"mandatory_data": [],
+		"description": "Get the class schedule for a client on a date",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsStaffOfClient/client"],
+		"permission": [],
+		"perform": "action_calendar->getClassesForClientDate/client/date"
+	}, {
+		"api_call": "GET/calendar/event/list/user/{}/ccyymmdd/{}",
+		"mandatory_data": [],
+		"description": "Get the workout logs, with class info, for a date",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsUser/user"],
+		"permission": [],
+		"perform": "action_calendar->getLogResultClassesForUserDate/user/ccyymmdd"
+	}, {
+		"api_call": "GET/calendar/entry/{}",
+		"mandatory_data": [],
+		"description": "Get the calendar entry for an ID",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsStaffOfCalendarEntry/entry"],
+		"permission": [],
+		"perform": "action_calendar_entry->getForID/entry"
+	}, {
+		"api_call": "GET/workout/entry/{}/start/{}",
+		"mandatory_data": [],
+		"description": "Get the workouts scheduled for a class",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsStaffOfCalendarEntry/entry"],
+		"permission": [],
+		"perform": "action_workout->getForEntryStart/entry/start"
+	}, {
+		"api_call": "GET/workout/template/{}/ccyymmdd/{}",
+		"mandatory_data": [],
+		"description": "Get the workouts scheduled for a class type on a day",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "action_workout->getForTemplateDate/template/ccyymmdd"
+	}, {
+		"api_call": "GET/calendar/entry/{}/start/{}",
+		"mandatory_data": [],
+		"description": "Get the calendar entry and calendar event",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsStaffOfCalendarEntry/entry"],
+		"permission": [],
+		"perform": "action_calendar_event->getCalendarEntryEventForEntryStart/entry/start"
+	}, {
+		"api_call": "GET/checkin/list/entry/{}/start/{}",
+		"mandatory_data": [],
+		"description": "Get the list of people checked into a class",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsStaffOfCalendarEntry/entry"],
+		"permission": [],
+		"perform": "action_checkin->getForEntryStartForWeb/entry/start"
+	}, {
+		"api_call": "POST/calendar/entry",
+		"mandatory_data": ["calendar_id"],
+		"description": "Create a new Calendar Entry",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsStaffOfCalendar/calendar_id"],
+		"permission": [],
+		"perform": "action_calendar_entry->create"
+	}, {
+		"api_call": "POST/calendar/event/note",
+		"mandatory_data": ["entry_id", "start","note"],
+		"description": "Create a new Calendar Event",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsStaffOfCalendarEntry/entry_id"],
+		"permission": [],
+		"perform": "action_calendar_event->create"
+	}, {
+		"api_call": "POST/calendar/wod/note",
+		"mandatory_data": ["template_id", "ccyymmdd", "note"],
+		"description": "Add a note to a Worout Of the Day",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "action_wod->changeWODNote"
+	}, {
+		"api_call": "POST/schedule/event/workout",
+		"mandatory_data": ["entry_id", "start","workout_id"],
+		"description": "Schedule a workout to a single event",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsStaffOfCalendarEntry/entry_id"],
+		"permission": [],
+		"perform": "action_calendar_event=>scheduleEventWorkout"
+	}, {
+		"api_call": "POST/schedule/wod/workout",
+		"mandatory_data": ["template_id", "ccyymmdd", "workout_id"],
+		"description": "Schedule a workout to a Workout Of the Day",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "action_wod->scheduleWODWorkout"
+	}, {
+		"api_call": "DELETE/schedule/event/entry/{}/start/{}/workout/{}",
+		"mandatory_data": [],
+		"description": "Remove a scheduled workout from a single Calendar Event",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsStaffOfCalendarEntry/entry"],
+		"permission": [],
+		"perform": "action_calendar_event->removeEventWorkout/entry/start/workout"
+	}, {
+		"api_call": "DELETE/schedule/wod/workout/{}/template/{}/ccyymmdd/{}",
+		"mandatory_data": [],
+		"description": "Remove a scheduled workout from a Workout Of the Day",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "action_wod->removeWODWorkout/template/ccyymmdd/workout"
+	}, {
+		"api_call": "PUT/calendar/entry",
+		"mandatory_data": ["id"],
+		"description": "Update a Calendar Entry",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsStaffOfCalendarEntry/id"],
+		"permission": [],
+		"perform": "action_calendar_entry->update"
+	}, {
+		"api_call": "POST/calendar/event",
+		"mandatory_data": ["entry_id", "start"],
+		"description": "Create a new Calendar Event",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsStaffOfCalendarEntry/entry_id"],
+		"permission": [],
+		"perform": "action_calendar_event->create"
+	}, {
+		"api_call": "DELETE/calendar/entry/{}/ccyymmdd/{}",
+		"mandatory_data": [],
+		"description": "Remove a date from a Calendar Entry",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsStaffOfCalendarEntry/entry"],
+		"permission": [],
+		"perform": "action_calendar_entry->AddRemovedDate/entry/ccyymmdd"
+	}, {
+		"api_call": "DELETE/calendar/entry/{}",
+		"mandatory_data": [],
+		"description": "Delete a Calendar Entry",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsStaffOfCalendarEntry/entry"],
+		"permission": [],
+		"perform": "action_calendar_entry->delete/entry"
+	}, {
+		"api_call": "GET/checkin_streak/user/{}/goal/{}/weeks/{}",
+		"mandatory_data": [],
+		"description": "Get the streak info for a user for a number of weeks at a goal",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsUser"],
+		"permission": [],
+		"perform": "action_streak->getForUserGoal/user/goal/weeks"
+	}, {
+		"api_call": "GET/client/{}",
+		"mandatory_data": [],
+		"description": "Get a Client",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsUser"],
+		"permission": [],
+		"perform": "table_workoutdb_client->getForId/client"
+	}, {
+		"api_call": "GET/client/search",
+		"mandatory_data": [],
+		"description": "Get Search list of Clients who have created Workouts",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "action_client->getSearchList"
+	}, {
+		"api_call": "GET/facebook/client/{}",
+		"mandatory_data": [],
+		"description": "Get the Client's Facebook token",
+		"validate": ["SessionIsLoggedIn","SessionUserIsStaffOfClient/client"],
+		"permission": [],
+		"perform": "action_facebook->extendUserToken/client"
+	}, {
+		"api_call": "PUT/client/facebook/page",
+		"mandatory_data": [],
+		"description": "Update the Client's Facebook Page info",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "action_facebook->updateClientForFacebookPage"
+	}, {
+		"api_call": "GET/client_user/mobile/client/{}",
+		"mandatory_data": [],
+		"description": "Get a list of Members for a Client in Mobile format",
+		"validate": ["SessionIsLoggedIn","SessionUserIsStaffOfClient/client"],
+		"permission": [],
+		"perform": "action_member->getForCientFormatMobile/client"
+	}, {
+		"api_call": "GET/client_user/web/client/{}",
+		"mandatory_data": [],
+		"description": "Get a list of Members for a Client in Web format",
+		"validate": ["SessionIsLoggedIn","SessionUserIsStaffOfClient/client"],
+		"permission": [],
+		"perform": "action_member->getForCientFormatWeb/client"
+	}, {
+		"api_call": "GET/client_user/{}",
+		"mandatory_data": [],
+		"description": "Get a Member's Info",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "action_member->getForId/client_user"
+	}, {
+		"api_call": "GET/checkin/list/client_user/{}",
+		"mandatory_data": [],
+		"description": "Get a List of Checkins for a Member",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "action_checkin->getForClientUser/client_user"
+	}, {
+		"api_call": "POST/client_user",
+		"mandatory_data": ["email"],
+		"description": "Create a new Member",
+		"validate": ["SessionIsLoggedIn","SessionUserIsStaffOfUser"],
+		"permission": [],
+		"perform": "action_member->create"
+	}, {
+		"api_call": "DELETE/client_user/{}",
+		"mandatory_data": [],
+		"description": "Deactivate a Member",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "action_member->deactivate"
+	}, {
+		"api_call": "GET/event/mobile/calendar/{}/ccyymmdd/{}/count_deleted/{}",
+		"mandatory_data": [],
+		"description": "Get a List of Classes for a Calendar for a Day in Mobile format",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsStaffOfCalendar/calendar"],
+		"permission": [],
+		"perform": "action_calendar_event->getForCalendarStartByDay/calendar/ccyymmdd/count_deleted=true"
+	}, {
+		"api_call": "GET/event/web/calendar/{}/ccyymmdd/{}/count_deleted/{}",
+		"mandatory_data": [],
+		"description": "Get a List of Classes for a Calendar for a Day in Web format",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsStaffOfCalendar/calendar"],
+		"permission": [],
+		"perform": "action_calendar_event->getForCalendarStartByDay/calendar/ccyymmdd/count_deleted=true"
+	}, {
+		"api_call": "GET/event/web/calendar/{}/ccyymmdd/{}/count_deleted/{}",
+		"mandatory_data": [],
+		"description": "Get a List of Classes for a Calendar for a Day in Web format",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsStaffOfCalendar/calendar"],
+		"permission": [],
+		"perform": "action_calendar_event->getForCalendarStartByDay/calendar/ccyymmdd/count_deleted=true"
+	}, {
+		"api_call": "GET/checkin/list/mobile/entry/{}/start/{}/deleted/{}",
+		"mandatory_data": [],
+		"description": "Get a List of Checkins for a Class",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsStaffOfCalendarEntry/entry"],
+		"permission": [],
+		"perform": "action_checkin->getForEntryStartForMobile/entry/start/deleted"
+	}, {
+		"api_call": "GET/calendar/has_activity/client/{}/ccyymmdd/{}",
+		"mandatory_data": [],
+		"description": "Get the days of the week that the any event has activity",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsStaffOfClient/client"],
+		"permission": [],
+		"perform": "action_has_activity->getDaysWithActivityForClientDate/client/ccyymmdd"
+	}, {
+		"api_call": "GET/workout/list/entry/{}/start/{}/client_user/{}",
+		"mandatory_data": [],
+		"description": "Get a List of Workouts for a Class. Use Member statistics",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "action_workout->getForEntryStartClientUser/entry/start/client_user"
+	}, {
+		"api_call": "GET/workoutlog/list/client_user/{}/workout/{}",
+		"mandatory_data": [],
+		"description": "Get a List of Workout Logs for a Member and Workout.",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "action_workout_log->getForClientUserWorkout/client_user/workout"
+	}, {
+		"api_call": "GET/checkin/chart/client/{}/ccyymmdd/{}",
+		"mandatory_data": [],
+		"description": "Get the Checkin Chart data for a Client on a Date",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "action_checkin_charts->getChartNumbersForClientDate/client/ccyymmdd"
+	}, {
+		"api_call": "GET/checkin/list/location/{}/start/{}",
+		"mandatory_data": [],
+		"description": "Get a List of Checked-in Members for classes Starting at a time for a Location",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "action_checkin->getForLocationStart/location/start"
+	}, {
+		"api_call": "PUT/checkin/delete",
+		"mandatory_data": ["entry_id","start","participant"],
+		"description": "Delete a list of Checkins from a Class",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "action_checkin->deleteCheckins"
+	}, {
+		"api_call": "GET/exercise",
+		"mandatory_data": [],
+		"description": "Get a list of All Exercises",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsSupport"],
+		"permission": [],
+		"perform": "action_exercise->getAll"
+	}, {
+		"api_call": "GET/exercise/{}",
+		"mandatory_data": [],
+		"description": "Get a Single Exercises",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsSupport"],
+		"permission": [],
+		"perform": "action_exercise->getForId/exercise"
+	}, {
+		"api_call": "GET/exercise/search",
+		"mandatory_data": [],
+		"description": "Get a Search List of Exercises",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsSupport"],
+		"permission": [],
+		"perform": "action_exercise->getSearchList"
+	}, {
+		"api_call": "POST/exercise",
+		"mandatory_data": ["name"],
+		"description": "Create a new Exercise entry",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsSupport"],
+		"permission": [],
+		"perform": "action_exercise->create"
+	}, {
+		"api_call": "PUT/exercise",
+		"mandatory_data": ["id"],
+		"description": "Update an existing Exercise entry",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsSupport"],
+		"permission": [],
+		"perform": "action_exercise->update"
+	}, {
+		"api_call": "DELETE/exercise/{}",
+		"mandatory_data": [],
+		"description": "Delete an existing Exercise entry",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsSupport"],
+		"permission": [],
+		"perform": "action_exercise->delete/equipment"
+	}, {
+		"api_call": "GET/equipment",
+		"mandatory_data": [],
+		"description": "Get a list of All Exercises",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsSupport"],
+		"permission": [],
+		"perform": "action_equipment->getAll"
+	}, {
+		"api_call": "GET/equipment/{}",
+		"mandatory_data": [],
+		"description": "Get a Single Equipment",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsSupport"],
+		"permission": [],
+		"perform": "action_equipment->getForId/equipment"
+	}, {
+		"api_call": "GET/equipment/search",
+		"mandatory_data": [],
+		"description": "Get a Search List of Equipment",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsSupport"],
+		"permission": [],
+		"perform": "action_equipment->getSearchList"
+	}, {
+		"api_call": "POST/equipment",
+		"mandatory_data": ["name"],
+		"description": "Create a new Equipment entry",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsSupport"],
+		"permission": [],
+		"perform": "action_equipment->create"
+	}, {
+		"api_call": "PUT/equipment",
+		"mandatory_data": ["id"],
+		"description": "Update an existing Equipment entry",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsSupport"],
+		"permission": [],
+		"perform": "action_equipment->update"
+	}, {
+		"api_call": "DELETE/equipment/{}",
+		"mandatory_data": [],
+		"description": "Delete an existing Equipment entry",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsSupport"],
+		"permission": [],
+		"perform": "action_equipment->delete/equipment"
+	}, {
+		"api_call": "GET/retention/client/{}",
+		"mandatory_data": [],
+		"description": "Get the Membership Retention Lists for a Client",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsStaffOfClient/client"],
+		"permission": [],
+		"perform": "action_retention->getForClient/client"
+	}, {
+		"api_call": "GET/checkin/emotional/participant/{}",
+		"mandatory_data": [],
+		"description": "Get the Start/End Emotional Levels for a Checked-in Member",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "action_checkin->getEmotionalForId/participant"
+	}, {
+		"api_call": "GET/retention/list/client/{}/type/{}/period/{}",
+		"mandatory_data": [],
+		"description": "Get a List of Members that qualify for a given Retention Type and Period",
+		"validate": ["SessionIsLoggedIn","SessionUserIsStaffOfClient/client"],
+		"permission": [],
+		"perform": "action_retention->getForClient/client/format=long/type/period"
+	}, {
+		"api_call": "POST/checkin/client_user",
+		"mandatory_data": ["entry_id","start","client_user_id"],
+		"description": "Check an existing Member into a Class",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "action_checkin->checkinExistingMember"
+	}, {
+		"api_call": "POST/checkin/new/client_user",
+		"mandatory_data": ["entry_id","start","email","role_id","first_name","last_name"],
+		"description": "Check a new Member into a Class",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsStaffOfCalendarEntry/Entry_id"],
+		"permission": [],
+		"perform": "action_checkin->checkinNewMember/data"
+	}, {
+		"api_call": "PUT/participant/emotional",
+		"mandatory_data": ["id"],
+		"description": "Update the Start/End Emotional level for a Checked-in Member",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "action_checkin->updateCheckinEmotionalLevel"
+	}, {
+		"api_call": "PUT/checkin/note",
+		"mandatory_data": ["id","note"],
+		"description": "Update the Note for a Checked-in Member",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "action_checkin->updateCheckinNote"
+	}, {
+		"api_call": "GET/leaderboard/client/workout/list/user/{}/ccyymmdd/{}",
+		"mandatory_data": [],
+		"description": "Get a List of Clients and their workouts that have Logs",
+		"validate": ["SessionIsLoggedIn","SessionUserIsUser/user"],
+		"permission": [],
+		"perform": "action_leaderboard->getClientWorkoutsWithLogsForUserDate/user/ccyymmdd"
+	}, {
+		"api_call": "GET/leaderboard/location/list/client/{}/workout/{}/ccyymmdd/{}",
+		"mandatory_data": [],
+		"description": "Get a List of locations and their schedules for the leaderboard",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "action_leaderboard->getLocationScheduleForClientDateWorkout/client/ccyymmdd/workout"
+	}, {
+		"api_call": "GET/leaderboard/ranking/client/{}/workout/{}/ccyymmdd/{}",
+		"mandatory_data": [],
+		"description": "Get the LeaderBoard Ranking",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "action_leaderboard->getRankingForClientDateWorkout/client/ccyymmdd/workout"
+	}, {
+		"api_call": "GET/user/{}",
+		"mandatory_data": [],
+		"description": "Get a User's Information",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsUserOrStaffOfUser/user"],
+		"permission": [],
+		"perform": "action_user->getForId/user"
+	}, {
+		"api_call": "GET/has_activity/user/{}/ccyymmdd/{}",
+		"mandatory_data": [],
+		"description": "Get the days of the week that the User has activity",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsUser/user"],
+		"permission": [],
+		"perform": "action_has_activity->getDaysWithActivityForUserDate/user/ccyymmdd"
+	}, {
+		"api_call": "GET/has_leaderboard_activity/user/{}/ccyymmdd/{}",
+		"mandatory_data": [],
+		"description": "Get the days of the week that the User has leaderboard_activity",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsUser/user"],
+		"permission": [],
+		"perform": "action_has_activity->getDaysWithLeaderboardActivityForUserDate/user/ccyymmdd"
+	}, {
+		"api_call": "GET/checkin/user/{}/ccyymmdd/{}",
+		"mandatory_data": [],
+		"description": "Get a list of checkins for a user on a date",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsUser/user"],
+		"permission": [],
+		"perform": "action_checkin->getForUserDate/user/ccyymmdd"
+	}, {
+		"api_call": "GET/user/facebook/{}",
+		"mandatory_data": [],
+		"description": "Get a User's Information with their Facebook Id",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsUserOfFacebookId/facebook"],
+		"permission": [],
+		"perform": "action_user->getForGoogleID/facebook"
+	}, {
+		"api_call": "GET/user/google/{}",
+		"mandatory_data": [],
+		"description": "Get a User's Information with their Google+ Id",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsUserOfGoogleId/google"],
+		"permission": [],
+		"perform": "action_user->getForGoogleID/google"
+	}, {
+		"api_call": "DELETE/workoutlog/pending/{}",
+		"mandatory_data": [],
+		"description": "Delete a Pending Workoutlog",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsUserOfPending/pending"],
+		"permission": [],
+		"perform": "table_workoutdb_workout_log_pending->delete/pending"
+	}, {
+		"api_call": "PUT/user",
+		"mandatory_data": ["id"],
+		"description": "Update a User's Information",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsUserOrStaffOfUser/id"],
+		"permission": [],
+		"perform": "action_user->update"
+	}, {
+		"api_call": "PUT/user/password",
+		"mandatory_data": ["id","old_password","new_password"],
+		"description": "Update a User's Password",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsUser/id"],
+		"permission": [],
+		"perform": "action_user->update_password"
+	}, {
+		"api_call": "GET/workout/list/client/{}",
+		"mandatory_data": [],
+		"description": "Get a List of Workouts with Client Stats",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsStaffOfClient/client"],
+		"permission": [],
+		"perform": "action_workout->getForClient/client"
+	}, {
+		"api_call": "GET/workout/list/user/{}",
+		"mandatory_data": [],
+		"description": "Get a List of Workouts with User Stats",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsUser/user"],
+		"permission": [],
+		"perform": "action_workout->getForUser/user"
+	}, {
+		"api_call": "GET/workout/{}/client/{}",
+		"mandatory_data": [],
+		"description": "Get a Single Workout with Client Stats",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsStaffOfClient/client"],
+		"permission": [],
+		"perform": "action_workout->getForIdClient/workout/client"
+	}, {
+		"api_call": "GET/workout/{}/user/{}",
+		"mandatory_data": [],
+		"description": "Get a Single Workouts with User Stats",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsUser/user"],
+		"permission": [],
+		"perform": "action_workout->getForIdUser/workout/user"
+	}, {
+		"api_call": "GET/workout/{}",
+		"mandatory_data": [],
+		"description": "Get a Single Workouts",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "action_workout->getForId/workout"
+	}, {
+		"api_call": "GET/workout/search",
+		"mandatory_data": [],
+		"description": "Get a Search List of Workouts",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "table_workoutdb_workout->getSearchList/cast_output=true"
+	}, {
+		"api_call": "POST/workout",
+		"mandatory_data": [],
+		"description": "Create a new Workout entry",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "action_workout->create"
+	}, {
+		"api_call": "POST/workout/preview",
+		"mandatory_data": ["workout"],
+		"description": "Get a Preview of what the Workout Summary would be",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "action_workout->getPreviewWorkoutSummary"
+	}, {
+		"api_call": "PUT/workout",
+		"mandatory_data": ["id"],
+		"description": "Update an existing Workout entry",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "action_workout->update"
+	}, {
+		"api_call": "DELETE/workout/{}",
+		"mandatory_data": [],
+		"description": "Delete an existing Workout entry",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "action_workout->delete/workout"
+	}, {
+		"api_call": "POST/workoutlog",
+		"mandatory_data": [],
+		"description": "Create a new Workout Log entry",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "action_workout_log->create"
+	}, {
+		"api_call": "POST/workoutlog/new",
+		"mandatory_data": [],
+		"description": "Create a new Workout Log entry",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "action_workout_log->create_new"
+	}, {
+		"api_call": "POST/workoutlog/preview",
+		"mandatory_data": ["workoutlog"],
+		"description": "Get a Preview of what the Workout Log Summary would be",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "action_workout_log->getPreview"
+	}, {
+		"api_call": "POST/workoutlog/autocalculate",
+		"mandatory_data": ["workoutlog"],
+		"description": "Get the Auto-Calculated Results of a Workout Log for the Session User",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "action_workout_log->autoCalculateForSessionUser"
+	}, {
+		"api_call": "PUT/workoutlog",
+		"mandatory_data": ["id"],
+		"description": "Update an existing Workout Log entry",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "action_workout_log->update"
+	}, {
+		"api_call": "DELETE/workoutlog/{}",
+		"mandatory_data": [],
+		"description": "Delete an existing Workout Log entry",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "action_workout_log->delete/workoutlog"
+	}, {
+		"api_call": "GET/calendar/event/detail/entry/{}/start/{}",
+		"mandatory_data": [],
+		"description": "Get a the lists of workouts scheduled for a calendar entry and date/time",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsStaffOfCalendar/calendar"],
+		"permission": [],
+		"perform": "action_calendar_event->getForEntryStart/entry/start"
+	}, {
+		"api_call": "GET/calendar/event/detail/template/{}/date/{}",
+		"mandatory_data": [],
+		"description": "Get the WODs for a template and date",
+		"validate": ["SessionIsLoggedIn", "SessionUserIsStaffOfCalendar/calendar"],
+		"permission": [],
+		"perform": "action_calendar_event->getForTemplatDate/template/date"
+	}, {
+		"api_call": "GET/body_region_part",
+		"mandatory_data": [],
+		"description": "Get the body regions and their body parts",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "action_body_region_part->get"
+	}, {
+		"api_call": "GET/body_region_part/exercise/{}",
+		"mandatory_data": [],
+		"description": "Get the body regions and their body parts for an exercise",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "action_body_region_part->getForExercise/exercise"
+	}, {
+		"api_call": "GET/workout_recording_type/search",
+		"mandatory_data": [],
+		"description": "Get the Search List for the Workout Recording Types",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "table_workoutdb_library_workout_recording_type->getSearchList"
+	}, {
+		"api_call": "GET/exercise_level/search",
+		"mandatory_data": [],
+		"description": "Get the Search List for the Exercise Levels",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "table_workoutdb_library_exercise_level->getSearchList"
+	}, {
+		"api_call": "GET/exercise_type/search",
+		"mandatory_data": [],
+		"description": "Get the Search List for the Exercise Types",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "table_workoutdb_library_exercise_type->getSearchList"
+	}, {
+		"api_call": "GET/sports_type/search",
+		"mandatory_data": [],
+		"description": "Get the Search List for the Sports Types",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "table_workoutdb_library_sport_type->getSearchList"
+	}, {
+		"api_call": "GET/client_user_role/search",
+		"mandatory_data": [],
+		"description": "Get the Search List for the ClientUser Rols",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "table_workoutdb_client_user_role->getSearchList"
+	}, {
+		"api_call": "GET/calendar_entry_type/search",
+		"mandatory_data": [],
+		"description": "Get the Search List for the CalendarEntry Types",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "table_workoutdb_calendar_entry_type->getSearchList"
+	}, {
+		"api_call": "GET/calendar_entry_repeat_type/search",
+		"mandatory_data": [],
+		"description": "Get the Search List for the CalendarEntry Repeat Types",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "table_workoutdb_calendar_entry_repeat_type->getSearchList"
+	}, {
+		"api_call": "GET/emotional_level/search",
+		"mandatory_data": [],
+		"description": "Get the Search List for the Emotional Levels",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "table_workoutdb_emotional_level->getSearchList"
+	}, {
+		"api_call": "GET/image_size/search",
+		"mandatory_data": [],
+		"description": "Get the Search List for the Image Sizes",
+		"validate": ["SessionIsLoggedIn"],
+		"permission": [],
+		"perform": "table_workoutdb_image_size->getSearchList"
+	}
+]

@@ -1,0 +1,50 @@
+{
+	"time_limit": {
+		"id": 0,
+		"value": {
+			"input": "30",
+			"note": ""
+		}
+	},
+	"repeats": {},
+	"set": [
+		{
+			"time_limit": {},
+			"repeats": {
+				"input": "1",
+				"note": ""
+			},
+			"break_time": {},
+			"exercise_group": [
+				{
+					"time_limit": {},
+					"repeats": {
+						"input": "12",
+						"note": ""
+					},
+					"break_time": {},
+					"exercise": {
+						"id": 39,
+						"distance_measurement": {},
+						"equipment": [
+							{
+								"id": 1,
+								"unit": {
+									"id": 3,
+									"man": {
+										"input": "100",
+										"note": ""
+									},
+									"woman": {
+										"input": "100",
+										"note": ""
+									}
+								}
+							}
+						]
+					}
+				}
+			]
+		}
+	]
+}

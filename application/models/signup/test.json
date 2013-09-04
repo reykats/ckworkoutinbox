@@ -1,0 +1,82 @@
+{
+	"user_id": 403,
+	"calendar_event_participation_id": 112068,
+	"library_workout_id": 422,
+	"library_workout_recording_type_id": 1,
+	"workout_log": {
+		"complete_round": {
+			"repeats": {
+				"input": "8",
+				"note": ""
+			},
+			"time_limit": {},
+			"set": [
+				{
+					"time_limit": {
+						"id": 0,
+						"value": {
+							"input": "1",
+							"note": ""
+						}
+					},
+					"repeats": {
+						"input": "1",
+						"note": ""
+					},
+					"break_time": {},
+					"exercise_group": [
+						{
+							"time_limit": {},
+							"repeats": {
+								"input": "1",
+								"note": ""
+							},
+							"break_time": {},
+							"exercise": {
+								"id": 17,
+								"name": "Clean",
+								"media": {},
+								"distance_measurement": {},
+								"equipment": [
+									{
+										"id": 1,
+										"name": "Barbell",
+										"deletable": false,
+										"media": {},
+										"unit": {
+											"id": 3,
+											"man": {
+												"input": "235",
+												"note": ""
+											},
+											"woman": {
+												"input": "235",
+												"note": ""
+											}
+										}
+									}
+								]
+							}
+						}
+					]
+				}
+			]
+		},
+		"incomplete_round": {}
+	},
+	"result": 8.00,
+	"result_uom_id": 1,
+	"time_limit": {
+		"id": 0,
+		"value": {
+			"input": "8",
+			"note": ""
+		}
+	},
+	"weight": {
+		"value": 175,
+		"id": 3
+	},
+	"note": null,
+	"auto_calculate_result": false
+}

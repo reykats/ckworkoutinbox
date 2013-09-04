@@ -1,0 +1,254 @@
+# ==========================================================================================================================================
+# On Development
+# ==========================================================================================================================================
+
+ifconfig eth1
+# you will need the ip on 2nd line labeled 'inet addr'
+
+# alpha : 10.180.134.114
+
+# ************************************************************************************************************************
+# Delete the Old dump files
+# ************************************************************************************************************************
+
+cd /var/www/users/root/scripts/conversion/
+ls
+
+rm *
+
+ls
+
+# ==========================================================================================================================================
+# On Production
+# ==========================================================================================================================================
+# ************************************************************************************************************************
+# Delete the Old dump files
+# ************************************************************************************************************************
+
+cd /var/www/users/root/scripts/conversion/
+ls
+
+rm *
+
+ls
+
+# ************************************************************************************************************************
+# Create a dump of the database's data and structure AND Transfer them to alpha
+# ************************************************************************************************************************
+
+cd /var/www/users/root/scripts/conversion/
+ls
+
+mysqldump workoutdb --opt  --user=root --password > prod_workoutdb_dump.sql
+mysqldump workoutdb --skip-triggers --compact --no-create-info --complete-insert --user=root --password > prod_workoutdb_data.sql
+
+cd /var/www/users/root/scripts/conversion/
+ls
+
+scp prod_workoutdb_data.sql root@10.180.134.114:/var/www/users/root/scripts/conversion
+scp prod_workoutdb_dump.sql root@10.180.134.114:/var/www/users/root/scripts/conversion
+
+# ************************************************************************************************************************
+# Create a dump of the client data AND Transfer it to alpha
+# ************************************************************************************************************************
+
+cd /var/www
+ls
+
+zip -r /var/www/users/root/scripts/conversion/prod_client_data.zip client_data > /var/www/users/root/scripts/conversion/zip.log
+
+cd /var/www/users/root/scripts/conversion/
+ls
+
+scp prod_client_data.zip root@10.180.134.114:/var/www/users/root/scripts/conversion
+
+# ************************************************************************************************************************
+# - Optional - Get a dump of production source code AND move it to alpha
+# ************************************************************************************************************************
+
+cd /var/www/sites/workoutinbox.com/
+ls -lrt
+
+zip -r /var/www/users/root/scripts/conversion/prod_code.zip public private > /var/www/users/root/scripts/conversion/zip_code.log
+
+cd /var/www/users/root/scripts/conversion/
+ls -lrt
+
+scp prod_code.zip root@10.180.134.114:/var/www/users/root/scripts/conversion
+
+# ==========================================================================================================================================
+# On Development
+# ==========================================================================================================================================
+# ************************************************************************************************************************
+# - Optional - copy the source code from alpha to delta
+# ************************************************************************************************************************
+
+cd /var/www/sites/delta.workoutinbox.com
+ls -lrt
+
+rm -r public
+rm -r private
+
+cp -r /var/www/sites/alpha.workoutinbox.com/p* ./
+
+ls -lrt
+
+chown -R www-data:www-data public
+chown -R www-data:www-data private
+
+ls -lrt
+
+cd /var/www/sites/delta.workoutinbox.com/private/application/config/
+ls
+
+
+
+---- $db['workoutdb']['database'] = 'deltadb';                      ----
+---- turn off production password and turn on development password ----
+---- turn off production password and turn on development password ----
+
+cd /var/www/sites/delta.workoutinbox.com/private/application/config/
+ls
+
+vi config.php
+---- $config['base_url']     = 'http://delta.workoutinbox.com/';
+
+vi config_workoutinbox.php
+---- $config['workoutinbox_client_data'] = '../../../delta/client_data';
+
+# ************************************************************************************************************************
+# - Optional - copy the source code from Production to delta
+# ************************************************************************************************************************
+
+cd /var/www/sites/delta.workoutinbox.com
+ls -lrt
+
+rm -r public
+rm -r private
+
+unzip /var/www/users/root/scripts/conversion/prod_code.zip > /var/www/users/root/scripts/conversion/unzip_code.log
+
+chown -R www-data:www-data public
+chown -R www-data:www-data private
+
+ls -lrt
+
+cd /var/www/sites/delta.workoutinbox.com/private/application/config/
+ls
+
+vi database.php
+---- $db['workoutdb']['database'] = 'deltadb';                      ----
+---- turn off production password and turn on development password ----
+---- turn off production password and turn on development password ----
+
+cd /var/www/sites/ziran.workoutinbox.com/private/application/config/
+ls
+
+vi config.php
+---- $config['base_url']     = 'http://delta.workoutinbox.com/';
+
+vi config_workoutinbox.php
+---- $config['workoutinbox_client_data'] = '../../../delta/client_data';
+
+# ************************************************************************************************************************
+# - Optional - copy the source code from SVN to delta
+# ************************************************************************************************************************
+
+cd /var/www/sites/delta.workoutinbox.com
+ls
+
+rm -r public
+rm -r private
+
+ls
+
+unzip /var/www/users/root/scripts/conversion/svn_code.zip > /var/www/users/root/scripts/conversion/unzip_code.log
+
+ls
+
+chown -R www-data:www-data public
+chown -R www-data:www-data private
+
+ls -lrt
+
+vi database.php
+---- $db['workoutdb']['database'] = 'deltadb';                      ----
+---- turn off production password and turn on development password ----
+---- turn off production password and turn on development password ----
+
+cd /var/www/sites/ziran.workoutinbox.com/private/application/config/
+ls
+
+vi config.php
+---- $config['base_url']     = 'http://delta.workoutinbox.com/';
+
+vi config_workoutinbox.php
+---- $config['workoutinbox_client_data'] = '../../../delta/client_data';
+
+# ************************************************************************************************************************
+# copy client_data from Production to delta
+# ************************************************************************************************************************
+
+cd /var/www/delta/
+ls
+
+rm -r client_data
+
+unzip /var/www/users/root/scripts/conversion/prod_client_data.zip > /var/www/users/root/scripts/conversion/unzip.log
+
+ls
+
+chown -R www-data:www-data client_data
+
+ls -lrt
+
+# ************************************************************************************************************************
+# Copy db from production to delta
+# ************************************************************************************************************************
+
+cd /var/www/users/root/scripts/conversion/
+ls -lrt
+
+mysql --user=root --password
+	SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+	SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+	# ----------------------------------------------
+	# Allow 0 in auto increment Primary key
+	# ----------------------------------------------
+	SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO';
+	# ----------------------------------------------
+	# show warnings
+	# ----------------------------------------------
+	warnings;
+	
+	# ----------------------------------------------
+	# drop the database and rebuild it
+	# ----------------------------------------------
+	drop database deltadb;
+	create database deltadb;
+	
+	# ----------------------------------------------
+	# run the dump against the database
+	# ----------------------------------------------
+	use deltadb;
+	source prod_workoutdb_dump.sql;
+	
+	# Do not send the user log notifications that are currently queued
+	
+	DELETE FROM user_notification_queue;
+	
+	# Change all passwords!
+	
+	UPDATE user SET password=MD5('delta!123') WHERE password <> '' AND password IS NOT NULL;
+	
+	exit;
+
+# ************************************************************************************************************************
+# rebuild the database schema file
+# ************************************************************************************************************************
+
+cd /var/www/users/root/scripts/conversion/
+ls -lrt
+
+php /var/www/sites/delta.workoutinbox.com/public/index.php cli schema refresh > schema_refresh.log
+
