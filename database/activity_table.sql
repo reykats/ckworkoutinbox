@@ -1,0 +1,2 @@
+create table `workoutdb`.`activity` (  `id` bigint (20) NOT NULL AUTO_INCREMENT , `name` varchar (100) NOT NULL , `user_id` bigint (20) NOT NULL , `activity_type` bigint (20) NOT NULL , `location_id` bigint (20) NOT NULL , `date` varchar (50) , `time` varchar (50) , `timestamp` timestamp , PRIMARY KEY (`id`)) ;
+alter table `workoutdb`.`activity` add column `focus_id` bigint (20)  NOT NULL  after `location_id`;
